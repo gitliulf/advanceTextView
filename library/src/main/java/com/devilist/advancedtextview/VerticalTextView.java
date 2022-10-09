@@ -28,7 +28,6 @@ import android.os.Vibrator;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -37,8 +36,6 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -230,8 +227,6 @@ public class VerticalTextView extends TextView {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        Log.d(TAG, "widthSize " + widthSize);
-        Log.d(TAG, "heightSize " + heightSize);
         // 粗略计算文字的最大宽度和最大高度，用于修正最后的测量宽高
         mTextAreaRoughBound = getTextRoughSize(heightSize == 0 ? mScreenHeight : heightSize,
                 mLineSpacingExtra, mCharSpacingExtra);
@@ -269,8 +264,6 @@ public class VerticalTextView extends TextView {
         }
         setMeasuredDimension(measuredWidth, measureHeight);
 
-        Log.d(TAG, "measuredWidth " + measuredWidth);
-        Log.d(TAG, "measureHeight " + measureHeight);
     }
 
     /**
@@ -329,9 +322,7 @@ public class VerticalTextView extends TextView {
         // 计算文本的粗略宽度，包括padding，
         int textWidth = getPaddingLeft() + getPaddingRight() +
                 (int) ((textLines + 1) * getTextSize() + lineSpacingExtra * (textLines - 1));
-        Log.d(TAG, "textRoughLines " + textLines);
-        Log.d(TAG, "textRoughWidth " + textWidth);
-        Log.d(TAG, "textRoughHeight " + textHeight);
+
         return new int[]{textWidth, textHeight};
     }
 
@@ -343,7 +334,6 @@ public class VerticalTextView extends TextView {
         int currentLine; // 当前所在行
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "ACTION_DOWN");
                 // 每次按下时，创建ActionMenu菜单，创建不成功，屏蔽长按事件
                 if (null == mActionMenu) {
                     mActionMenu = createActionMenu();
@@ -356,7 +346,6 @@ public class VerticalTextView extends TextView {
                 isLongPressTouchActionUp = false;
                 break;
             case ACTION_MOVE:
-                Log.d(TAG, "ACTION_MOVE");
                 // 先判断是否禁用了ActionMenu功能，以及ActionMenu是否创建失败，
                 // 二者只要满足了一个条件，退出长按事件
                 if (isShowActionMenu || mActionMenu.getChildCount() == 0) {
@@ -372,7 +361,6 @@ public class VerticalTextView extends TextView {
                     boolean isInBound = event.getX() >= drawPadding[0] && event.getX() <= getWidth() - drawPadding[2]
                             && event.getY() >= drawPadding[1] && event.getY() <= getHeight() - drawPadding[3];
                     if (isTriggerTime && isTriggerDistance && isInBound) {
-                        Log.d(TAG, "ACTION_MOVE 长按");
                         isLongPress = true;
                         isLongPressTouchActionUp = false;
                         mStartLine = currentLine;
@@ -394,7 +382,6 @@ public class VerticalTextView extends TextView {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                Log.d(TAG, "ACTION_UP");
                 // 处理长按事件
                 if (isLongPress) {
                     currentLine = getCurrentTouchLine(event.getX(), isLeftToRight);
@@ -451,7 +438,6 @@ public class VerticalTextView extends TextView {
 
         currentLine = currentLine <= 0 ? 1 : (currentLine > mMaxTextLine ? mMaxTextLine : currentLine);
 
-        Log.d(TAG, "touch line is: " + currentLine);
         return currentLine;
     }
 
@@ -479,7 +465,6 @@ public class VerticalTextView extends TextView {
                 mSelectedText = textAll.substring(Math.min(index_start, index_end),
                         Math.max(index_start, index_end));
         }
-        Log.d(TAG, "mSelectedText  " + mSelectedText);
     }
 
     /**
@@ -522,7 +507,6 @@ public class VerticalTextView extends TextView {
                 break;
             }
         }
-        Log.d(TAG, "target index  " + targetIndex);
         return targetIndex;
     }
 
@@ -768,7 +752,6 @@ public class VerticalTextView extends TextView {
                 mLinesTextIndex.put(mMaxTextLine, new int[]{currentLineStartIndex, textStrLength});
             }
         }
-        Log.d(TAG, "mMaxTextLine is : " + mMaxTextLine);
     }
 
     /**
